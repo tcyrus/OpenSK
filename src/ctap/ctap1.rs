@@ -144,14 +144,12 @@ impl TryFrom<&[u8]> for U2fCommand {
             // +-----------------+-------------------+
             // + Challenge (32B) | Application (32B) |
             // +-----------------+-------------------+
-            Ctap1Command::U2F_REGISTER => {
-                if lc != 64 {
-                    return Err(Ctap1StatusCode::SW_WRONG_LENGTH);
-                }
-                Ok(Self::Register {
+            Ctap1Command::U2F_REGISTER => match lc {
+                64 => Ok(Self::Register {
                     challenge: *array_ref!(payload, 0, 32),
                     application: *array_ref!(payload, 32, 32),
-                })
+                }),
+                _ => Err(Ctap1StatusCode::SW_WRONG_LENGTH),
             }
 
             // U2F raw message format specification, Section 5.1
@@ -176,11 +174,9 @@ impl TryFrom<&[u8]> for U2fCommand {
             }
 
             // U2F raw message format specification, Section 6.1
-            Ctap1Command::U2F_VERSION => {
-                if lc != 0 {
-                    return Err(Ctap1StatusCode::SW_WRONG_LENGTH);
-                }
-                Ok(Self::Version)
+            Ctap1Command::U2F_VERSION => match lc {
+                0 => Ok(Self::Version),
+                _ => Err(Ctap1StatusCode::SW_WRONG_LENGTH),
             }
 
             // For Vendor specific command.
