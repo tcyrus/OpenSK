@@ -153,7 +153,7 @@ generate_crypto_materials () {
     # array by replacing the initial spaces on each line with "0x", replacing
     # the semicolons at the end of each line by commas and replacing all
     # remainging semicolons by ". 0x".
-    echo "pub const ATTESTATION_PRIVATE_KEY: [u8; 32] = [" >> "${rust_file}"
+    echo "pub const ATTESTATION_PRIVATE_KEY: [u8; 33] = [" >> "${rust_file}"
     "${openssl}" ec \
       -in "${opensk_key}" \
       -noout \
